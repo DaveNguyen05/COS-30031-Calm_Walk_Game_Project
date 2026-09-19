@@ -22,7 +22,7 @@ public class PlayerInteractor : MonoBehaviour
             IInteractable interactable = hit.GetComponent<IInteractable>();
             if (interactable != null)
             {
-                interactable.Interact();
+                interactable.Interact(gameObject);
                 break; // only interact with the closest/first one found
             }
         }
