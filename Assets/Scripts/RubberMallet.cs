@@ -21,8 +21,6 @@ public class RubberMallet : MonoBehaviour
             )
         );
 
-        // RIGHT CLICK + HOLD DIRECTLY ON MALLET
-        // = ACTIVATE + MOVE
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             Collider2D[] hits = Physics2D.OverlapPointAll(
@@ -45,7 +43,6 @@ public class RubberMallet : MonoBehaviour
             }
         }
 
-        // MOVE + INSTALL
         if (isMoving && Mouse.current.rightButton.isPressed)
         {
             MoveToMouse(worldPosition);
@@ -56,7 +53,6 @@ public class RubberMallet : MonoBehaviour
             }
         }
 
-        // RELEASE = STOP
         if (Mouse.current.rightButton.wasReleasedThisFrame)
         {
             isMoving = false;
@@ -68,14 +64,9 @@ public class RubberMallet : MonoBehaviour
         }
     }
 
-    // -------------------------
-    // MOVE
-    // -------------------------
-
     void MoveToMouse(Vector3 worldPosition)
     {
         worldPosition.z = transform.position.z;
-
         transform.position = worldPosition;
     }
 
@@ -93,28 +84,24 @@ public class RubberMallet : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            if (hit.gameObject.name.StartsWith("NewFloor") &&
-                !hit.gameObject.activeSelf)
+            if (hit.gameObject.name.StartsWith("NewFloor"))
             {
-                hit.gameObject.SetActive(true);
+                SpriteRenderer sr = hit.gameObject.GetComponent<SpriteRenderer>();
 
-                Debug.Log("New floor installed!");
+                if (sr != null && !sr.enabled)
+                {
+                    sr.enabled = true;
+                    Debug.Log("New floor installed!");
+                }
             }
         }
     }
-
-    // -------------------------
-    // RETURN TO TOOLBOX
-    // -------------------------
 
     void CheckReturnToToolbox()
     {
         if (isUsing)
         {
-            Debug.Log(
-                "RUBBER MALLET IS ON - CANNOT RETURN!"
-            );
-
+            Debug.Log("RUBBER MALLET IS ON - CANNOT RETURN!");
             return;
         }
 
@@ -130,9 +117,7 @@ public class RubberMallet : MonoBehaviour
             {
                 gameObject.SetActive(false);
 
-                Debug.Log(
-                    "RUBBER MALLET RETURNED TO TOOLBOX!"
-                );
+                Debug.Log("RUBBER MALLET RETURNED TO TOOLBOX!");
 
                 return;
             }

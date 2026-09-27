@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Toolbox : MonoBehaviour
+public class Toolbox : MonoBehaviour, IInteractable
 {
     [Header("Panel")]
     public GameObject toolSelectionPanel;
@@ -23,8 +22,6 @@ public class Toolbox : MonoBehaviour
     [Header("Tool Spacing")]
     public float toolSpacing = 0.8f;
 
-    private bool isMoving = false;
-
     void Start()
     {
         // Toolbox panel starts closed
@@ -37,112 +34,22 @@ public class Toolbox : MonoBehaviour
         }
     }
 
-    void Update()
+    // -------------------------
+    // INTERACTION (E KEY)
+    // -------------------------
+
+    public void Interact(GameObject interactor)
     {
-        if (Mouse.current == null)
-            return;
+        toolSelectionPanel.SetActive(
+            !toolSelectionPanel.activeSelf
+        );
 
-        Vector2 mousePosition =
-            Mouse.current.position.ReadValue();
-
-        Vector3 worldPosition =
-            Camera.main.ScreenToWorldPoint(
-                new Vector3(
-                    mousePosition.x,
-                    mousePosition.y,
-                    -Camera.main.transform.position.z
-                )
-            );
-
-        // LEFT CLICK = OPEN / CLOSE TOOLBOX
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            CheckForClick(worldPosition);
-        }
-
-        // RIGHT CLICK = START MOVING TOOLBOX
-        if (Mouse.current.rightButton.wasPressedThisFrame)
-        {
-            Collider2D[] hits =
-                Physics2D.OverlapPointAll(
-                    new Vector2(
-                        worldPosition.x,
-                        worldPosition.y
-                    )
-                );
-
-            foreach (Collider2D hit in hits)
-            {
-                Toolbox toolbox =
-                    hit.GetComponentInParent<Toolbox>();
-
-                if (toolbox == this)
-                {
-                    isMoving = true;
-                    break;
-                }
-            }
-        }
-
-        // MOVE TOOLBOX
-        if (isMoving &&
-            Mouse.current.rightButton.isPressed)
-        {
-            MoveToMouse(worldPosition);
-        }
-
-        // STOP MOVING
-        if (Mouse.current.rightButton.wasReleasedThisFrame)
-        {
-            isMoving = false;
-        }
+        Debug.Log("TOOLBOX OPENED/CLOSED!");
     }
 
-    // -------------------------
-    // TOOLBOX CLICK
-    // -------------------------
-
-    void CheckForClick(Vector3 worldPosition)
+    public string GetPrompt()
     {
-        Collider2D[] hits =
-            Physics2D.OverlapPointAll(
-                new Vector2(
-                    worldPosition.x,
-                    worldPosition.y
-                )
-            );
-
-        foreach (Collider2D hit in hits)
-        {
-            Toolbox toolbox =
-                hit.GetComponentInParent<Toolbox>();
-
-            if (toolbox == this)
-            {
-                toolSelectionPanel.SetActive(
-                    !toolSelectionPanel.activeSelf
-                );
-
-                Debug.Log(
-                    "TOOLBOX OPENED/CLOSED!"
-                );
-
-                return;
-            }
-        }
-    }
-
-    // -------------------------
-    // MOVE TOOLBOX
-    // -------------------------
-
-    void MoveToMouse(Vector3 worldPosition)
-    {
-        worldPosition.z =
-            transform.position.z;
-
-        transform.position =
-            worldPosition;
+        return "Press E to open Toolbox";
     }
 
     // -------------------------
@@ -153,9 +60,7 @@ public class Toolbox : MonoBehaviour
     {
         toolSelectionPanel.SetActive(false);
 
-        Debug.Log(
-            "TOOLBOX PANEL CLOSED!"
-        );
+        Debug.Log("TOOLBOX PANEL CLOSED!");
     }
 
     // -------------------------
@@ -198,18 +103,14 @@ public class Toolbox : MonoBehaviour
 
     public void SelectMoistureMeter()
     {
-        // Show Moisture Meter UI
         if (moistureMeterUI != null)
         {
             moistureMeterUI.SetActive(true);
         }
 
-        // Close toolbox panel
         toolSelectionPanel.SetActive(false);
 
-        Debug.Log(
-            "MOISTURE METER SELECTED!"
-        );
+        Debug.Log("MOISTURE METER SELECTED!");
     }
 
     // -------------------------
@@ -218,8 +119,6 @@ public class Toolbox : MonoBehaviour
 
     void PlaceTool(GameObject tool)
     {
-        // Selecting any physical tool
-        // hides Moisture Meter UI
         if (moistureMeterUI != null)
         {
             moistureMeterUI.SetActive(false);
@@ -227,54 +126,31 @@ public class Toolbox : MonoBehaviour
 
         if (tool == null)
         {
-            Debug.LogWarning(
-                "Tool reference is missing."
-            );
-
+            Debug.LogWarning("Tool reference is missing.");
             return;
         }
 
         if (toolDropPoint == null)
         {
-            Debug.LogWarning(
-                "Tool Drop Point is missing."
-            );
-
+            Debug.LogWarning("Tool Drop Point is missing.");
             return;
         }
 
-        // If this tool is already on the floor,
-        // don't create another copy
         if (tool.activeSelf)
         {
-            Debug.Log(
-                tool.name +
-                " is already on the floor."
-            );
-
+            Debug.Log(tool.name + " is already on the floor.");
             toolSelectionPanel.SetActive(false);
-
             return;
         }
 
-        // Activate tool
         tool.SetActive(true);
 
-        // Find free position
-        Vector3 spawnPosition =
-            FindFreeToolPosition();
+        Vector3 spawnPosition = FindFreeToolPosition();
+        tool.transform.position = spawnPosition;
 
-        tool.transform.position =
-            spawnPosition;
-
-        // Close toolbox panel
         toolSelectionPanel.SetActive(false);
 
-        Debug.Log(
-            tool.name +
-            " selected at position: " +
-            spawnPosition
-        );
+        Debug.Log(tool.name + " selected at position: " + spawnPosition);
     }
 
     // -------------------------
@@ -283,20 +159,14 @@ public class Toolbox : MonoBehaviour
 
     Vector3 FindFreeToolPosition()
     {
-        Vector3 position =
-            toolDropPoint.position;
-
+        Vector3 position = toolDropPoint.position;
         int positionNumber = 0;
 
         while (IsToolAtPosition(position))
         {
             positionNumber++;
-
-            position =
-                toolDropPoint.position;
-
-            position.x +=
-                positionNumber * toolSpacing;
+            position = toolDropPoint.position;
+            position.x += positionNumber * toolSpacing;
         }
 
         return position;
@@ -310,11 +180,7 @@ public class Toolbox : MonoBehaviour
     {
         float checkRadius = 0.35f;
 
-        Collider2D[] hits =
-            Physics2D.OverlapCircleAll(
-                position,
-                checkRadius
-            );
+        Collider2D[] hits = Physics2D.OverlapCircleAll(position, checkRadius);
 
         foreach (Collider2D hit in hits)
         {
