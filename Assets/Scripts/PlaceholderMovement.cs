@@ -5,6 +5,8 @@ public class PlaceholderMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
 
+    [HideInInspector] public float speedMultiplier = 1f;
+
     private Rigidbody2D rb;
     private Animator animator;
     private Vector2 input = Vector2.zero;
@@ -31,7 +33,6 @@ public class PlaceholderMovement : MonoBehaviour
         if (kb.dKey.isPressed) input.x += 1;
         if (kb.aKey.isPressed) input.x -= 1;
 
-        // Facing: left/right wins when moving diagonally
         if (input.x < 0) facing = "Left";
         else if (input.x > 0) facing = "Right";
         else if (input.y > 0) facing = "Up";
@@ -44,11 +45,9 @@ public class PlaceholderMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + input.normalized * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + input.normalized * moveSpeed * speedMultiplier * Time.fixedDeltaTime);
     }
 
-    // Only switches clips when the state actually changes,
-    // so the animation isn't restarted every frame
     void PlayState(string stateName)
     {
         if (stateName == currentState)

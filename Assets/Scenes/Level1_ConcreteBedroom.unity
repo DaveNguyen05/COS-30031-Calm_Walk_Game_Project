@@ -4375,6 +4375,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3930529185052414104, guid: 9ceb5f5c0df26f949b2d3b2a8be1bcbe, type: 3}
+      propertyPath: waterSpeedMultiplier
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6752973405814266888, guid: 9ceb5f5c0df26f949b2d3b2a8be1bcbe, type: 3}
       propertyPath: m_Name
       value: Player
