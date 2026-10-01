@@ -936,6 +936,7 @@ GameObject:
   - component: {fileID: 1369955464}
   - component: {fileID: 1369955463}
   - component: {fileID: 1369955462}
+  - component: {fileID: 1369955465}
   m_Layer: 0
   m_Name: Hotbar HUD
   m_TagString: Untagged
@@ -1021,6 +1022,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369955460}
   m_CullTransparentMesh: 1
+--- !u!114 &1369955465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369955460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437e0177f968d95478cdd418c1f0888e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloorFixerV2.HotbarFix.HotbarSelectionController
+  normalColour: {r: 0.94, g: 0.94, b: 0.94, a: 1}
+  selectedColour: {r: 1, g: 0.65, b: 0.1, a: 1}
 --- !u!1 &1401075247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1449,7 +1464,6 @@ GameObject:
   - component: {fileID: 1815312803}
   - component: {fileID: 1815312806}
   - component: {fileID: 1815312805}
-  - component: {fileID: 1815312804}
   m_Layer: 0
   m_Name: Slot 1
   m_TagString: Untagged
@@ -1477,18 +1491,6 @@ RectTransform:
   m_AnchoredPosition: {x: -289.7562, y: 23.1982}
   m_SizeDelta: {x: 53.5325, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1815312804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815312802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc3a7d4cb162d2a46bd4158cd2932d25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FloorFixerV2.HotbarHUD.HotbarSlot
 --- !u!114 &1815312805
 MonoBehaviour:
   m_ObjectHideFlags: 0
