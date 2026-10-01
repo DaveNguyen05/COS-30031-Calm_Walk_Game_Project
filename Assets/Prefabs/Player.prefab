@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2289661924783316047}
   - component: {fileID: 3697694191436525229}
   - component: {fileID: 3930529185052414104}
+  - component: {fileID: 8412195333477249110}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -245,5 +246,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0908fd6b31b8294881ffd913212cbe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloorEffects
+  knockbackForce: 8
+  knockbackDuration: 0.2
   dirtSpeedMultiplier: 0.3
   waterSpeedMultiplier: 2.5
+--- !u!114 &8412195333477249110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6752973405814266888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa73688e85c30ff459595b81ddd98a5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerToolHolder
+  slotTools: 050000000000000000000000000000000000000000000000000000000000000000000000

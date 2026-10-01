@@ -14,10 +14,12 @@ public class FloorEffects : MonoBehaviour
     public float waterSpeedMultiplier = 1.5f;
 
     private PlaceholderMovement movement;
+    private PlayerToolHolder toolHolder;
 
     void Awake()
     {
         movement = GetComponent<PlaceholderMovement>();
+        toolHolder = GetComponent<PlayerToolHolder>();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -35,6 +37,14 @@ public class FloorEffects : MonoBehaviour
         else if (name.Contains("Water") || name.Contains("Moisture"))
         {
             movement.speedMultiplier = waterSpeedMultiplier;
+        }
+        else if (name.Contains("OldFloor"))
+        {
+            if (toolHolder != null && toolHolder.CurrentTool == ToolType.FloorScraper)
+            {
+                other.gameObject.SetActive(false);
+                Debug.Log(name + " removed with Floor Scraper!");
+            }
         }
     }
 
