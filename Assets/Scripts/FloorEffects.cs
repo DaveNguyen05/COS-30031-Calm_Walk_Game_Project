@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class FloorEffects : MonoBehaviour
 {
+    [Header("Uneven Floor Knockback")]
+    public float knockbackForce = 8f;
+    public float knockbackDuration = 0.2f;
+
     [Header("Dirt Slow")]
     [Range(0f, 1f)]
     public float dirtSpeedMultiplier = 0.5f;
@@ -20,7 +24,11 @@ public class FloorEffects : MonoBehaviour
     {
         string name = other.gameObject.name;
 
-        if (name.Contains("Dirt"))
+        if (name.Contains("Uneven") && !name.Contains("Highlight"))
+        {
+            movement.ApplyKnockback(other.transform.position, knockbackForce, knockbackDuration);
+        }
+        else if (name.Contains("Dirt"))
         {
             movement.speedMultiplier = dirtSpeedMultiplier;
         }

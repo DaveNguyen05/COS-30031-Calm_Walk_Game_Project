@@ -13,6 +13,10 @@ public class PlaceholderMovement : MonoBehaviour
     private string facing = "Down";
     private string currentState = "";
 
+    private bool isKnockedBack = false;
+    private Vector2 knockbackVelocity = Vector2.zero;
+    private float knockbackTimer = 0f;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -21,6 +25,9 @@ public class PlaceholderMovement : MonoBehaviour
 
     void Update()
     {
+        if (isKnockedBack)
+            return; // ignore WASD while being knocked back
+
         var kb = Keyboard.current;
 
         if (kb == null)
@@ -45,6 +52,19 @@ public class PlaceholderMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isKnockedBack)
+        {
+            rb.MovePosition(rb.position + knockbackVelocity * Time.fixedDeltaTime);
+
+            knockbackTimer -= Time.fixedDeltaTime;
+            if (knockbackTimer <= 0f)
+            {
+                isKnockedBack = false;
+            }
+
+            return;
+        }
+
         rb.MovePosition(rb.position + input.normalized * moveSpeed * speedMultiplier * Time.fixedDeltaTime);
     }
 
@@ -55,5 +75,19 @@ public class PlaceholderMovement : MonoBehaviour
 
         animator.Play(stateName);
         currentState = stateName;
+    }
+
+    // Called by FloorEffects when the player touches an uneven floor patch.
+    // Pushes the player away from 'source' for a short time, overriding normal movement.
+    public void ApplyKnockback(Vector2 source, float force, float duration)
+    {
+        Vector2 direction = ((Vector2)transform.position - source).normalized;
+
+        if (direction == Vector2.zero)
+            direction = Vector2.down; // fallback if exactly overlapping
+
+        knockbackVelocity = direction * force;
+        knockbackTimer = duration;
+        isKnockedBack = true;
     }
 }
